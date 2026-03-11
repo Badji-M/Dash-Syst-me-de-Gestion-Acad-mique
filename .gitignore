@@ -33,6 +33,7 @@ Thumbs.db
 # Local environment and logs
 .env
 .env.*
+!.env.example
 *.log
 
 # Local application data
@@ -42,6 +43,8 @@ sga.db
 *.sqlite3-journal
 exports/
 current_deps.txt
+data/source.xlsx
+data/~$source.xlsx
 
 
 

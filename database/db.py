@@ -16,18 +16,22 @@ from config import DB_URL, DEFAULT_USERS
 from database.models import Base, User
 
 
-# ─── Engine SQLAlchemy ────────────────────────────────────────────────────────
-engine = create_engine(
-    DB_URL,
-    connect_args={"check_same_thread": False},
-    echo=False,
-)
+IS_SQLITE = DB_URL.startswith("sqlite")
 
-@event.listens_for(engine, "connect")
-def set_sqlite_pragma(dbapi_connection, connection_record):
-    cursor = dbapi_connection.cursor()
-    cursor.execute("PRAGMA foreign_keys=ON")
-    cursor.close()
+
+# ─── Engine SQLAlchemy ────────────────────────────────────────────────────────
+engine_kwargs = {"echo": False}
+if IS_SQLITE:
+    engine_kwargs["connect_args"] = {"check_same_thread": False}
+
+engine = create_engine(DB_URL, **engine_kwargs)
+
+if IS_SQLITE:
+    @event.listens_for(engine, "connect")
+    def set_sqlite_pragma(dbapi_connection, connection_record):
+        cursor = dbapi_connection.cursor()
+        cursor.execute("PRAGMA foreign_keys=ON")
+        cursor.close()
 
 
 # ─── Session Factory ──────────────────────────────────────────────────────────

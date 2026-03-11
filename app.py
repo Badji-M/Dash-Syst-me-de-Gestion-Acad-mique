@@ -7,7 +7,16 @@ FIX CRITIQUE : Import de toutes les pages AU DÉMARRAGE pour enregistrer
 import dash
 from dash import html, dcc, callback, Output, Input, State, no_update
 
-from config import APP_TITLE, FA_CDN, DEBUG
+from config import (
+    APP_TITLE,
+    FA_CDN,
+    DEBUG,
+    HOST,
+    PORT,
+    SECRET_KEY,
+    AUTO_INIT_DB,
+    RUN_STARTUP_MIGRATION,
+)
 from database.db import init_db
 from database.migration import run_migration
 from components.header import get_header
@@ -51,6 +60,26 @@ app = dash.Dash(
     external_stylesheets=[FA_CDN],
 )
 server = app.server
+server.config["SECRET_KEY"] = SECRET_KEY
+
+
+_BOOTSTRAPPED = False
+
+
+def bootstrap_app():
+    global _BOOTSTRAPPED
+    if _BOOTSTRAPPED:
+        return
+
+    if AUTO_INIT_DB or RUN_STARTUP_MIGRATION:
+        init_db()
+    if RUN_STARTUP_MIGRATION:
+        run_migration()
+
+    _BOOTSTRAPPED = True
+
+
+bootstrap_app()
 
 
 # ─── Layout Global ────────────────────────────────────────────────────────────
@@ -202,8 +231,7 @@ if __name__ == "__main__":
     print("=" * 55)
     print(f"  {APP_TITLE}")
     print("=" * 55)
-    init_db()
-    run_migration()
-    print("[BOOT] http://127.0.0.1:8050  |  admin / admin123")
+    bootstrap_app()
+    print(f"[BOOT] http://127.0.0.1:{PORT}")
     print("=" * 55)
-    app.run(debug=DEBUG, host="0.0.0.0", port=8050)
+    app.run(debug=DEBUG, host=HOST, port=PORT)
