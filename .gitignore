@@ -1,0 +1,55 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.eggs/
+build/
+dist/
+pip-wheel-metadata/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+.python-version
+
+# Test and lint caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Editor and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Local environment and logs
+.env
+.env.*
+*.log
+
+# Local application data
+sga.db
+*.db-journal
+*.sqlite3
+*.sqlite3-journal
+exports/
+current_deps.txt
+
+
+
+# Audit notes generated during debugging
+AUDIT_CALLBACKS_DELETE.md
+README_AUDIT.md
+RESUME_AUDIT_DELETE.md
+SOLUTIONS_DELETE_CALLBACKS.md
+SYNTHESE_RAPIDE.md
+TABLEAU_SYNTHESE.md
+
